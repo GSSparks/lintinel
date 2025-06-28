@@ -8,16 +8,13 @@
 
 ## What It Does
 
-- Lints code and infrastructure files (Docker, YAML, Terraform, etc.)
-- Suggests improvements via AI (OpenAI, Ollama, Claude, etc.)
-- Integrates with GitHub PRs or runs as a CLI
-- Uses a flexible plugin-based rule engine
-- Extensible by contributors with Python-based rules
+***NOTE*** This project is in the beginning phases of development.
 
----
-
-## Project Structure
-
+- ✔️ Lints code and infrastructure files (Docker, YAML, Terraform, etc.)
+- ✖️ Suggests improvements via AI (OpenAI, Ollama, Claude, etc.)
+- ✖️ Integrates with GitHub PRs or runs as a CLI
+- ✔️ Uses a flexible plugin-based rule engine
+- ✔️ Extensible by contributors with Python-based rules
 
 ---
 
@@ -29,7 +26,7 @@
 git clone https://github.com/yourusername/lintinel.git
 cd lintinel
 pip install -r requirements.txt
-python cli/main.py /path/to/your/repo
+python main.py /path/to/your/repo
 ```
 ### Run with Docker
 
