@@ -36,6 +36,64 @@ docker build -t lintinel .
 docker run -v $(pwd):/repo lintinel /repo
 ```
 
+--- 
+## GitHub PR Integration (Webhook Bot)
+
+Lintinel can act as a GitHub App that automatically audits code changes in pull requests and posts comments with lint results.
+
+### Requirements
+- A GitHub App registered under your GitHub account
+
+- Your public/private key pair downloaded from GitHub
+
+- Webhook listener exposed (e.g., via ngrok)
+
+- A .env file with the following variables:
+```
+GITHUB_APP_ID=your-app-id
+GITHUB_WEBHOOK_SECRET=your-webhook-secret
+GITHUB_PRIVATE_KEY_PATH=./private-key.pem
+```
+
+**Keep your private key secure!**
+Never commit it to your repository.
+
+### Quick Start
+1. Clone this repo and install dependencies:
+```
+git clone https://github.com/your-username/lintinel.git
+cd lintinel
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+2. Start the webhook listener:
+```
+uvicorn webhook_listener:app --host 0.0.0.0 --port 8000
+```
+
+3. Expose it to GitHub (e.g., using ngrok):
+```
+ngrok http 8000
+```
+Copy the https:// URL from ngrok.
+
+4. Configure your GitHub App:
+- Set the webhook URL to: `https://your-ngrok-url/webhook`
+- Subscribe to: `Pull request` events
+- Grant permissions:
+  - Contents: Read-only
+  - Pull requests: Read & Write
+
+5. Install your GitHub App on a test repository
+6. Create or update aPR in the test repo.
+Lintel will automatically:
+  - Clone the repo at the PR's branch
+  - Run enabled lint rules
+  - Comment the results back on the PR
+
+---
 ## Example Rules (Initial Set)
 | Rule Type	| Description |
 |-----------|-------------|
