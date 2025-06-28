@@ -126,5 +126,5 @@ Submit a PR
 GPLv3
 
 ## Credits
-Built by Gary Sparks, with inspiration from DevOps pipelines, AI assistants, and all the great open source linting tools that came before us.
+Built by Gary Sparks, with inspiration from DevOps pipelines, AI assistants, and all the great open source linting tools that came before.
 
