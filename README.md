@@ -12,7 +12,7 @@
 
 - ✔️ Lints code and infrastructure files (Docker, YAML, Terraform, etc.)
 - ✖️ Suggests improvements via AI (OpenAI, Ollama, Claude, etc.)
-- ✖️ Integrates with GitHub PRs or runs as a CLI
+- ✔️ Integrates with GitHub PRs or runs as a CLI
 - ✔️ Uses a flexible plugin-based rule engine
 - ✔️ Extensible by contributors with Python-based rules
 
