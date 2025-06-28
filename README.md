@@ -1,5 +1,3 @@
-# Lintinel
-
 ![Lintinel Logo](./images/lintinel.png)
 
 **Lintinel** is your AI-powered DevOps assistant that audits your codebase and infrastructure for best practices, compliance, and quality — and makes smart suggestions using modern LLMs.
