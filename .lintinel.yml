@@ -1,0 +1,8 @@
+# .lintinel.yml
+
+rules:
+  DockerfileBestPractices: true
+  TerraformModuleVersioning: true
+  YAMLLinter: true
+  MissingDotfiles: true
+
