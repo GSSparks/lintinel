@@ -28,6 +28,7 @@ cd lintinel
 pip install -r requirements.txt
 python main.py /path/to/your/repo
 ```
+
 ### Run with Docker
 
 ```bash
