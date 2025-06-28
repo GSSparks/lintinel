@@ -39,7 +39,7 @@ docker run -v $(pwd):/repo lintinel /repo
 | Rule Type	| Description |
 |-----------|-------------|
 |Dockerfile	| Warn on unpinned image versions (e.g. ubuntu:latest) |
-|Terraform	| Missing description field in variables |
+|Terraform	| Warn on unpinned module versions |
 |YAML	    | Inconsistent spacing or syntax |
 |Git	    | Missing .gitignore, .editorconfig |
 |Custom	    | Easily add your own Python rules! |
