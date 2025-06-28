@@ -10,3 +10,11 @@ yamllint==1.33.0
 rich==13.7.1        # for better CLI output in future
 termcolor==2.4.0    # optional: for colorful prints
 
+# FastAPI Webhook Listener
+fastapi
+uvicorn
+python-multipart
+PyJWT
+python-dotenv
+cryptography
+requests
