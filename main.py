@@ -9,6 +9,8 @@ from rules.base import Rule
 from output.formatter import format_as_json, format_as_markdown
 from utils.repo_loader import prepare_repo
 from ai.summarizer import generate_summary
+from ai.fixer import suggest_fix
+
 
 load_dotenv()  # Load OPENAI_API_KEY from .env
 
@@ -54,6 +56,18 @@ def run_lint(repo_url, branch=None, token=None, output_format="json"):
         try:
             result = rule.run(repo_path)
             if result:
+                if ai_config.get("fixes"):
+                    for issue in result.get("issues", []):
+                        code_sample = issue.get("code", "")
+                        if code_sample:
+                            fix = suggest_fix(
+                                file_path=issue.get("file", "unknown file"),
+                                code=code_sample,
+                                rule_name=rule_name,
+                                issue=issue.get("message", "Unspecified issue"),
+                                tone=ai_config.get("tone", "helpful")
+                            )
+                            issue["ai_fix"] = fix
                 results.append(result)
         except Exception as e:
             results.append({

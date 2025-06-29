@@ -21,7 +21,9 @@ class PythonLinter(Rule):
             return {
                 "name": self.name,
                 "description": self.description,
-                "issues": ["✅ No Python files found."]
+                "issues": [{
+                    "message": "✅ No Python files found."
+                }]
             }
 
         try:
@@ -37,15 +39,34 @@ class PythonLinter(Rule):
                     try:
                         full_path, line_no, col_no, code, message = line.split("::", 4)
                         rel_path = os.path.relpath(full_path, repo_path)
-                        issues.append(f"{rel_path:<40} Line {line_no}, Col {col_no}  [{code}]  {message}")
-                    except ValueError:
-                        # If parsing fails, fallback to raw line
-                        issues.append(line)
+                        line_no = int(line_no)
+
+                        # Read the line of offending code
+                        with open(full_path, "r") as f:
+                            lines = f.readlines()
+                            offending_code = lines[line_no - 1].strip() if 0 < line_no <= len(lines) else ""
+
+                        issues.append({
+                            "file": rel_path,
+                            "line": line_no,
+                            "column": int(col_no),
+                            "message": f"[{code}] {message}",
+                            "code": offending_code
+                        })
+                    except Exception as parse_error:
+                        issues.append({
+                            "message": f"Could not parse flake8 output: {line}",
+                            "code": ""
+                        })
             else:
-                issues.append("✅ No issues found.")
+                issues.append({
+                    "message": "✅ No issues found."
+                })
 
         except Exception as e:
-            issues.append(f"Error running flake8: {e}")
+            issues.append({
+                "message": f"Error running flake8: {e}"
+            })
 
         return {
             "name": self.name,
