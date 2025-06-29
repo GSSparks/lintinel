@@ -35,7 +35,7 @@ Add your OpenAI API key to .env
 OPENAI_API_KEY=your-openai-api-key
 ```
 
-### Run with Docker
+### Run with Docker (not yet support)
 
 ```bash
 docker build -t lintinel .
