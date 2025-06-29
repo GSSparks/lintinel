@@ -6,6 +6,7 @@ rules:
   TerraformModuleVersioning: true
   DockerfileBestPractices: true
   MissingDotfiles: true
+  PythonLinter: true
 
 ai:
   enabled: true
