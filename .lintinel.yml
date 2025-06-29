@@ -1,4 +1,6 @@
 # .lintinel.yml
+# This config file needs to be placed in the root directory of
+# the repo that you wish to use Lintinel on. 
 
 rules:
   YAMLLinter: true
