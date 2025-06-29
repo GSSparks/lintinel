@@ -1,8 +1,16 @@
 # .lintinel.yml
 
 rules:
-  DockerfileBestPractices: true
-  TerraformModuleVersioning: true
   YAMLLinter: true
+  BashLinter: true
+  TerraformModuleVersioning: true
+  DockerfileBestPractices: true
   MissingDotfiles: true
+
+ai:
+  enabled: true
+  provider: openai
+  model: gpt-4
+  tone: mentor  # or strict, friendly, playful
+
 

@@ -1,15 +1,16 @@
 #!/bin/env python
-
 # main.py
-
-#!/bin/env python
 
 import os
 import importlib
 import yaml
+from dotenv import load_dotenv
 from rules.base import Rule
 from output.formatter import format_as_json, format_as_markdown
 from utils.repo_loader import prepare_repo
+from ai.summarizer import generate_summary
+
+load_dotenv()  # Load OPENAI_API_KEY from .env
 
 RULES_DIR = "rules"
 
@@ -33,10 +34,6 @@ def load_rules():
     return rules
 
 def run_lint(repo_url, branch=None, token=None, output_format="json"):
-    """
-    Clone the repo (with token auth if given), checkout branch,
-    run enabled lint rules, and return results formatted as string.
-    """
     try:
         repo_path = prepare_repo(repo_url, token=token, branch=branch)
     except Exception as e:
@@ -46,9 +43,13 @@ def run_lint(repo_url, branch=None, token=None, output_format="json"):
     results = []
     config = load_config(repo_path)
     enabled_rules = config.get("rules", {}) if config else {}
+    ai_config = config.get("ai", {})
+
+    summary = None
 
     for rule in rules:
-        if enabled_rules and not enabled_rules.get(rule.__class__.__name__, True):
+        rule_name = rule.__class__.__name__
+        if enabled_rules and not enabled_rules.get(rule_name, True):
             continue
         try:
             result = rule.run(repo_path)
@@ -61,13 +62,27 @@ def run_lint(repo_url, branch=None, token=None, output_format="json"):
                 "issues": [f"Error running rule: {e}"]
             })
 
-    if results:
-        if output_format == "json":
-            return format_as_json(results)
-        else:
-            return format_as_markdown(results)
+    if ai_config.get("enabled") and results:
+        tone = ai_config.get("tone", "helpful")
+        summary = generate_summary(results, tone=tone)
+
+    if output_format == "json":
+        output_data = {
+            "results": results,
+        }
+        if summary:
+            output_data["ai_summary"] = summary
+        return format_as_json(output_data)
+
+    elif output_format == "markdown":
+        md = format_as_markdown(results)
+        if summary:
+            md += "\n\n## Summary\n\n" + summary
+        return md
+
     else:
         return "No issues found."
+
 
 def main():
     import argparse
@@ -84,4 +99,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
