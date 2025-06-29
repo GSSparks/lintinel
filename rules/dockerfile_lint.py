@@ -14,30 +14,28 @@ class DockerfileBestPractices(Rule):
                 if file == "Dockerfile":
                     dockerfile_path = os.path.join(root, file)
                     rel_path = os.path.relpath(dockerfile_path, repo_path)
-                    try:
-                        with open(dockerfile_path, "r") as f:
-                            lines = f.readlines()
 
-                        dfp = DockerfileParser()
-                        dfp.content = "".join(lines)
+                    try:
+                        dfp = DockerfileParser(path=dockerfile_path)
                         base_image = dfp.baseimage
 
-                        if base_image:
-                            if ":" not in base_image or base_image.endswith(":latest"):
-                                # Find the FROM line
-                                for idx, line in enumerate(lines):
-                                    if line.strip().startswith("FROM"):
-                                        issues.append({
-                                            "file": rel_path,
-                                            "line": idx + 1,
-                                            "message": f"Base image '{base_image}' is not pinned to a specific version.",
-                                            "code": line.strip()
-                                        })
-                                        break
+                        if base_image and (":" not in base_image or base_image.endswith(":latest")):
+                            with open(dockerfile_path) as f:
+                                lines = f.readlines()
+                            for idx, line in enumerate(lines):
+                                if line.strip().startswith("FROM"):
+                                    issues.append({
+                                        "file": rel_path,
+                                        "line": idx + 1,
+                                        "message": f"Base image '{base_image}' is not pinned to a specific version.",
+                                        "code": line.strip()
+                                    })
+                                    break
+
                     except Exception as e:
                         issues.append({
                             "file": rel_path,
-                            "message": f"Failed to parse Dockerfile: {e}",
+                            "message": f"❌ Failed to parse Dockerfile: {e}",
                             "code": ""
                         })
 
