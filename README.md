@@ -30,6 +30,11 @@ pip install -r requirements.txt
 python main.py /path/to/your/repo
 ```
 
+Add your OpenAI API key to .env
+```
+OPENAI_API_KEY=your-openai-api-key
+```
+
 ### Run with Docker
 
 ```bash
