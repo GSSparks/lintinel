@@ -1,3 +1,10 @@
 .env
 *.pem
-__pycache--
+__pycache__/
+ai/__pycache__/
+output/__pycache__/
+rules/__pycache__/
+tests/__pycache__/
+utils/__pycache__/
+venv/
+.python-version
