@@ -27,13 +27,22 @@
 git clone https://github.com/yourusername/lintinel.git
 cd lintinel
 pip install -r requirements.txt
-python main.py /path/to/your/repo
 ```
 
 Add your OpenAI API key to .env
-```
+```bash
 OPENAI_API_KEY=your-openai-api-key
 ```
+
+Place a `.lintinel.yml` configuration file in the repo
+you want to run lintinel against. See the example in 
+this repo.
+
+Usage:
+```bash
+python main.py /path/to/your/repo
+```
+
 
 ### Run with Docker (not yet support)
 
@@ -59,6 +68,7 @@ Lintinel can act as a GitHub App that automatically audits code changes in pull 
 GITHUB_APP_ID=your-app-id
 GITHUB_WEBHOOK_SECRET=your-webhook-secret
 GITHUB_PRIVATE_KEY_PATH=./private-key.pem
+OPENAI_API_KEY=your-openai-api-key
 ```
 
 **Keep your private key secure!**
