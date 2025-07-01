@@ -5,6 +5,9 @@ pyyaml==6.0.1
 # Linting helpers (optional rules may use these)
 dockerfile-parse==2.0.0
 yamllint==1.33.0
+flake8
+pycodestyle
+pyflakes
 
 # CLI & Dev
 rich==13.7.1        # for better CLI output in future
