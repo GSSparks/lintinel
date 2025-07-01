@@ -8,7 +8,7 @@ load_dotenv()
 
 client = OpenAI()
 
-def call_openai(prompt, model="gpt-4", temperature=0.4):
+def call_openai(prompt, model="gpt-4.1-nano", temperature=0.4):
 
     try:
         response = client.chat.completions.create(
