@@ -1,26 +1,29 @@
-# tests/test_bash_linter.py
-
-import os
+import unittest
 import tempfile
+import os
 from rules.bash_linter import BashLinter
 
-def test_bash_linter_detects_issues():
-    bad_bash_script = """
-#!/bin/bash
-echo Hello World
-VAR=test
-if [ "$VAR" = test ] ; then
-    echo $VAR
-fi
-"""
+class TestBashLinter(unittest.TestCase):
 
-    with tempfile.TemporaryDirectory() as tmpdir:
-        script_path = os.path.join(tmpdir, "bad_script.sh")
-        with open(script_path, "w") as f:
-            f.write(bad_bash_script)
+    def test_detects_shellcheck_issues(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Create a bad Bash script
+            bad_script = os.path.join(temp_dir, "test.sh")
+            with open(bad_script, "w") as f:
+                f.write('#!/bin/bash\n')
+                f.write('if [ "$foo" = "bar" ]\n')  # Missing 'then'
+                f.write('  echo "broken"\n')
+                f.write('fi\n')
 
-        rule = BashLinter()
-        result = rule.run(tmpdir)
+            # Run the BashLinter
+            linter = BashLinter()
+            result = linter.run(temp_dir)
 
-        assert result["issues"], "Expected issues from shellcheck, but got none."
-        assert any("bad_script.sh" in issue for issue in result["issues"]), "Script name not found in issue list"
+            self.assertIn("issues", result)
+            issues = result["issues"]
+
+            self.assertTrue(any("Expected 'then'" in issue["message"] for issue in issues))
+            self.assertTrue(any("Couldn't parse this if expression" in issue["message"] for issue in issues))
+
+if __name__ == "__main__":
+    unittest.main()

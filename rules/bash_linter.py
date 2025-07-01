@@ -1,10 +1,11 @@
 from rules.base import Rule
 import os
 import subprocess
+import json
 
 class BashLinter(Rule):
     name = "Bash Linter"
-    description = "Checks .sh files for syntax and style issues using shellcheck"
+    description = "Checks .sh files for syntax and style issues using shellcheck."
 
     def run(self, repo_path):
         issues = []
@@ -14,40 +15,37 @@ class BashLinter(Rule):
                 if file.endswith(".sh"):
                     file_path = os.path.join(root, file)
                     rel_path = os.path.relpath(file_path, repo_path)
+
                     try:
+                        with open(file_path, "r") as f:
+                            lines = f.readlines()
+
                         result = subprocess.run(
-                            ["shellcheck", "-f", "gcc", file_path],
+                            ["shellcheck", "--format", "json", file_path],
                             capture_output=True,
                             text=True,
                             check=False
                         )
 
-                        # Example line: script.sh:5:1: warning: Use `#!/usr/bin/env bash` instead of `#!/bin/bash`
-                        for line in result.stdout.strip().split("\n"):
-                            try:
-                                parts = line.split(":", 3)
-                                if len(parts) == 4:
-                                    _, line_no, col_no, message = parts
-                                    line_no = int(line_no)
-                                    col_no = int(col_no)
+                        diagnostics = json.loads(result.stdout)
 
-                                    with open(file_path, "r") as f:
-                                        lines = f.readlines()
-                                        code = lines[line_no - 1].strip() if 0 < line_no <= len(lines) else ""
+                        # If it's a list, iterate directly
+                        if isinstance(diagnostics, list):
+                            comments = diagnostics
+                        else:
+                            comments = diagnostics.get("comments", [])
 
-                                    issues.append({
-                                        "file": rel_path,
-                                        "line": line_no,
-                                        "column": col_no,
-                                        "message": message.strip(),
-                                        "code": code
-                                    })
-                            except Exception as parse_err:
-                                issues.append({
-                                    "file": rel_path,
-                                    "message": f"Failed to parse shellcheck output: {line}",
-                                    "code": ""
-                                })
+                        for comment in comments:
+                            line_no = comment.get("line", 0)
+                            message = comment.get("message", "Unknown issue")
+                            code_line = lines[line_no - 1].strip() if 0 < line_no <= len(lines) else ""
+
+                            issues.append({
+                                "file": rel_path,
+                                "line": line_no,
+                                "message": message,
+                                "code": code_line
+                            })
 
                     except Exception as e:
                         issues.append({
