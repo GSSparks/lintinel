@@ -17,10 +17,12 @@ def format_as_markdown(results):
             md += "- ✅ No issues found.\n"
             continue
 
-        for issue in issues:
+        for idx, issue in enumerate(issues, 1):
             if isinstance(issue, str):
                 md += f"- {issue}\n"
             elif isinstance(issue, dict):
+                md += f"### Issue {idx}\n"
+
                 file = issue.get("file", "Unknown file")
                 line = issue.get("line", "N/A")
                 message = issue.get("message", "")
@@ -32,7 +34,6 @@ def format_as_markdown(results):
                 if code:
                     md += f"  - **Code**:\n```yaml\n{code.strip()}\n```\n"
                 if ai_fix:
-                    md += f"  - **💡 AI Suggestion**:\n\n{ai_fix.strip()}\n\n"
+                    md += f"\n{ai_fix.strip()}\n\n"
 
     return md
-
