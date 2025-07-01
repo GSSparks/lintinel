@@ -49,6 +49,9 @@ def run_lint(repo_url, branch=None, token=None, output_format="json"):
 
     summary = None
 
+    # Keep track of lines already fixed
+    fixed_locations = set()
+
     for rule in rules:
         rule_name = rule.__class__.__name__
         if enabled_rules and not enabled_rules.get(rule_name, True):
@@ -58,16 +61,43 @@ def run_lint(repo_url, branch=None, token=None, output_format="json"):
             if result:
                 if ai_config.get("fixes"):
                     for issue in result.get("issues", []):
+                        file_path = issue.get("file")
+                        line_no = issue.get("line")
                         code_sample = issue.get("code", "")
-                        if code_sample:
+
+                        location_key = f"{file_path}:{line_no}"
+
+                        # Only fix once per line (or within 1-2 lines proximity)
+                        if file_path and isinstance(line_no, int):
+                            # Avoid fixing the same general area
+                            if any(abs(line_no - int(l.split(":")[1])) <= 1 for l in fixed_locations if l.startswith(file_path)):
+                                continue
+
+                            full_path = os.path.join(repo_path, file_path)
+                            if os.path.exists(full_path):
+                                try:
+                                    with open(full_path, "r") as f:
+                                        lines = f.readlines()
+                                    start = max(0, line_no - 4)
+                                    end = min(len(lines), line_no + 3)
+                                    context_snippet = "".join(lines[start:end]).strip()
+                                except Exception:
+                                    context_snippet = code_sample or "[Could not read surrounding lines]"
+                            else:
+                                context_snippet = code_sample or "[File not found]"
+                        else:
+                            context_snippet = code_sample
+
+                        if context_snippet:
                             fix = suggest_fix(
-                                file_path=issue.get("file", "unknown file"),
-                                code=code_sample,
+                                file_path=file_path or "unknown file",
+                                code=context_snippet,
                                 rule_name=rule_name,
                                 issue=issue.get("message", "Unspecified issue"),
                                 tone=ai_config.get("tone", "helpful")
                             )
                             issue["ai_fix"] = fix
+                            fixed_locations.add(location_key)
                 results.append(result)
         except Exception as e:
             results.append({
@@ -75,6 +105,7 @@ def run_lint(repo_url, branch=None, token=None, output_format="json"):
                 "description": rule.description,
                 "issues": [f"Error running rule: {e}"]
             })
+
 
     if ai_config.get("enabled") and results:
         tone = ai_config.get("tone", "helpful")

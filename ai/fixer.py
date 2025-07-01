@@ -11,9 +11,11 @@ A linting rule called "{rule_name}" found this issue:
 
 Here is the relevant code snippet from `{file_path}`:
 
+
 ```
 {code}
 ```
+
 
 Please suggest an improved version of the snippet.
 
@@ -24,6 +26,8 @@ This is the only interaction you will have with this particular snippet of code.
 
 Respond in markdown format with a heading for "Suggested Fix" and one for "Explanation".
 Please make the heading a heading 3 (eg., ###).
+
+Do not be too chatty.
 """.strip()
 
     return call_openai(prompt, temperature=0.3)
