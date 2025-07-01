@@ -8,28 +8,9 @@ class MissingDotfiles(Rule):
     description = "Checks for the presence of .editorconfig and .gitignore in the root of the repo."
 
     DEFAULT_CONTENTS = {
-        ".editorconfig": """
-root = true
+        ".editorconfig": "#",
 
-[*]
-charset = utf-8
-end_of_line = lf
-insert_final_newline = true
-indent_style = space
-indent_size = 4
-        """.strip(),
-
-        ".gitignore": """
-# Python
-__pycache__/
-*.py[cod]
-*.egg
-*.egg-info/
-dist/
-build/
-.env
-venv/
-        """.strip()
+        ".gitignore": "#"
     }
 
     def run(self, repo_path):
