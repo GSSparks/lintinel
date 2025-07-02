@@ -2,6 +2,7 @@ from rules.base import Rule
 import os
 import subprocess
 
+
 class YAMLLinter(Rule):
     name = "YAML Linter"
     description = "Checks YAML files for syntax and style issues using yamllint."
@@ -46,7 +47,7 @@ class YAMLLinter(Rule):
                                 except Exception as parse_err:
                                     issues.append({
                                         "file": rel_path,
-                                        "message": f"Failed to parse yamllint output: {line}",
+                                        "message": f"Failed to parse yamllint output: {line} - {parse_err}",
                                         "code": ""
                                     })
 

@@ -4,9 +4,11 @@ import os
 import tempfile
 from rules.yaml_linter import YAMLLinter
 
+
 def create_test_file(path, content):
     with open(path, "w") as f:
         f.write(content)
+
 
 def test_yaml_linter_detects_errors():
     with tempfile.TemporaryDirectory() as repo_dir:
@@ -29,4 +31,3 @@ def test_yaml_linter_detects_errors():
 
         # Optionally: print issues for debugging
         print("\n".join(result["issues"]))
-

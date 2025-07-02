@@ -14,11 +14,13 @@ def call_openai(prompt, model="gpt-4.1-nano", temperature=0.4):
         response = client.chat.completions.create(
             model=model,
             messages=[
-                {"role": "system",
-                 "content": "You are an expert DevOps assistant."
+                {
+                    "role": "system",
+                    "content": "You are an expert DevOps assistant."
                 },
-                {"role": "user",
-                 "content": prompt
+                {
+                    "role": "user",
+                    "content": prompt
                 }
             ],
             temperature=temperature,

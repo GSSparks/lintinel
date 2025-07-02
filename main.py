@@ -79,9 +79,9 @@ def run_lint(repo_url, branch=None, token=None, output_format="json"):
                         if file_path and isinstance(line_no, int):
                             # Avoid fixing the same general area
                             if any(
-                                abs(line_no - int(l.split(":")[1])) <= 1
-                                for l in fixed_locations
-                                if l.startswith(file_path)
+                                abs(line_no - int(location.split(":")[1])) <= 1
+                                for location in fixed_locations
+                                if location.startswith(file_path)
                             ):
                                 continue
 
@@ -159,6 +159,7 @@ def main():
 
     output = run_lint(args.repo, branch=args.branch, token=args.token, output_format=args.format)
     print(output)
+
 
 if __name__ == "__main__":
     main()

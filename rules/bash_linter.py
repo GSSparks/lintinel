@@ -3,6 +3,7 @@ import os
 import subprocess
 import json
 
+
 class BashLinter(Rule):
     name = "Bash Linter"
     description = "Checks .sh files for syntax and style issues using shellcheck."
