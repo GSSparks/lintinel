@@ -1,3 +1,5 @@
+# rules/terraform_module_versioning.py
+
 from rules.base import Rule
 import os
 import re
@@ -11,37 +13,41 @@ class TerraformModuleVersioning(Rule):
     def run(self, repo_path):
         issues = []
 
-        for root, dirs, files in os.walk(repo_path):
+        for root, _, files in os.walk(repo_path):
             for file in files:
                 if file.endswith(".tf"):
                     file_path = os.path.join(root, file)
                     rel_path = os.path.relpath(file_path, repo_path)
                     try:
                         with open(file_path, "r") as f:
-                            lines = f.readlines()
-                            content = ''.join(lines)
+                            content = f.read()
 
-                        # Track modules using line offset
+                        # Find each module block by regex match
                         for match in self.module_start_pattern.finditer(content):
-                            start_line_idx = content[:match.start()].count('\n')
-                            name = match.group('name')
+                            name = match.group("name")
                             block_start = match.start()
+                            remaining = content[block_start:]
 
-                            # Try to get full block using braces
+                            # Parse block using brace counting
                             brace_count = 0
-                            block_lines = []
-                            for i, line in enumerate(lines[start_line_idx:], start=start_line_idx):
-                                brace_count += line.count("{")
-                                brace_count -= line.count("}")
-                                block_lines.append(line)
-                                if brace_count == 0:
-                                    break
+                            block_chars = []
+                            for idx, char in enumerate(remaining):
+                                block_chars.append(char)
+                                if char == "{":
+                                    brace_count += 1
+                                elif char == "}":
+                                    brace_count -= 1
+                                    if brace_count == 0:
+                                        break
 
-                            block = ''.join(block_lines)
+                            block = "".join(block_chars)
+                            block_lines = content[:block_start + len(block)].splitlines()
+                            line_offset = content[:block_start].count('\n')
+
                             if 'source' in block and 'version' not in block:
                                 issues.append({
                                     "file": rel_path,
-                                    "line": start_line_idx + 1,
+                                    "line": line_offset + 1,
                                     "message": f"Module '{name}' has no pinned version.",
                                     "code": block.strip()
                                 })
