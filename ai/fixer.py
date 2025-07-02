@@ -2,7 +2,15 @@
 
 from ai.client import call_openai
 
-def suggest_fix(file_path: str, code: str, rule_name: str, issue: str, tone: str = "mentor") -> str:
+
+def suggest_fix(
+    file_path: str,
+    code: str,
+    rule_name: str,
+    issue: str,
+    tone: str = "mentor"
+    ) -> str:
+
     prompt = f"""
 You are an expert DevOps engineer and code reviewer.
 

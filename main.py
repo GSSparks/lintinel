@@ -16,12 +16,14 @@ load_dotenv()  # Load OPENAI_API_KEY from .env
 
 RULES_DIR = "rules"
 
+
 def load_config(repo_path):
     config_path = os.path.join(repo_path, ".lintinel.yml")
     if os.path.exists(config_path):
         with open(config_path, "r") as f:
             return yaml.safe_load(f)
     return {}
+
 
 def load_rules():
     rules = []
@@ -31,9 +33,14 @@ def load_rules():
             module = importlib.import_module(f"{RULES_DIR}.{module_name}")
             for attr in dir(module):
                 obj = getattr(module, attr)
-                if isinstance(obj, type) and issubclass(obj, Rule) and obj != Rule:
+                if (
+                    isinstance(obj, type) and
+                    issubclass(obj, Rule) and
+                    obj != Rule
+                ):
                     rules.append(obj())
     return rules
+
 
 def run_lint(repo_url, branch=None, token=None, output_format="json"):
     try:
@@ -67,10 +74,15 @@ def run_lint(repo_url, branch=None, token=None, output_format="json"):
 
                         location_key = f"{file_path}:{line_no}"
 
-                        # Only fix once per line (or within 1-2 lines proximity)
+                        # Only fix once per line
+                        # (or within 1-2 lines proximity)
                         if file_path and isinstance(line_no, int):
                             # Avoid fixing the same general area
-                            if any(abs(line_no - int(l.split(":")[1])) <= 1 for l in fixed_locations if l.startswith(file_path)):
+                            if any(
+                                abs(line_no - int(l.split(":")[1])) <= 1
+                                for l in fixed_locations
+                                if l.startswith(file_path)
+                            ):
                                 continue
 
                             full_path = os.path.join(repo_path, file_path)
@@ -80,11 +92,18 @@ def run_lint(repo_url, branch=None, token=None, output_format="json"):
                                         lines = f.readlines()
                                     start = max(0, line_no - 4)
                                     end = min(len(lines), line_no + 3)
-                                    context_snippet = "".join(lines[start:end]).strip()
+                                    context_snippet = (
+                                        "".join(lines[start:end])
+                                        .strip()
+                                    )
                                 except Exception:
-                                    context_snippet = code_sample or "[Could not read surrounding lines]"
+                                    context_snippet = (
+                                        code_sample or "[Could not read surrounding lines]"
+                                    )
                             else:
-                                context_snippet = code_sample or "[File not found]"
+                                context_snippet = (
+                                    code_sample or "[File not found]"
+                                )
                         else:
                             context_snippet = code_sample
 
@@ -105,7 +124,6 @@ def run_lint(repo_url, branch=None, token=None, output_format="json"):
                 "description": rule.description,
                 "issues": [f"Error running rule: {e}"]
             })
-
 
     if ai_config.get("enabled") and results:
         tone = ai_config.get("tone", "helpful")

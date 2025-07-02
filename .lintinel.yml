@@ -1,6 +1,7 @@
+---
 # .lintinel.yml
 # This config file needs to be placed in the root directory of
-# the repo that you wish to use Lintinel on. 
+# the repo that you wish to use Lintinel on.
 
 rules:
   YAMLLinter: true
@@ -16,5 +17,3 @@ ai:
   model: gpt-4
   fixes: true
   tone: mentor  # or strict, friendly, playful
-
-
