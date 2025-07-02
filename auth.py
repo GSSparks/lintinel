@@ -8,6 +8,7 @@ load_dotenv()  # Load variables from .env into environment
 APP_ID = int(os.getenv("GITHUB_APP_ID"))
 PRIVATE_KEY_PATH = os.getenv("GITHUB_PRIVATE_KEY_PATH")
 
+
 def generate_jwt():
     with open(PRIVATE_KEY_PATH, "r") as f:
         private_key = f.read()

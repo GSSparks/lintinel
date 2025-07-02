@@ -28,7 +28,7 @@ class PythonLinter(Rule):
 
         try:
             result = subprocess.run(
-                ["flake8", "--format=%(path)s::%(row)d::%(col)d::%(code)s::%(text)s"] + python_files,
+                ["flake8", "--ignore=E501", "--format=%(path)s::%(row)d::%(col)d::%(code)s::%(text)s"] + python_files,
                 capture_output=True,
                 text=True,
                 check=False
