@@ -16,4 +16,4 @@ ai:
   provider: openai
   model: gpt-4
   fixes: true
-  tone: mentor  # or strict, friendly, playful
+  tone: strict  # or strict, friendly, playful
