@@ -16,4 +16,4 @@ ai:
   provider: openai
   model: gpt-4
   fixes: true
-  tone: strict  # or strict, friendly, playful
+  tone: jerky  # or strict, friendly, playful
