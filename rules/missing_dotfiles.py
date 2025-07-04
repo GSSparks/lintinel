@@ -3,6 +3,7 @@
 from rules.base import Rule
 import os
 
+
 class MissingDotfiles(Rule):
     name = "Missing Project Dotfiles"
     description = "Checks for the presence of .editorconfig and .gitignore in the root of the repo."

@@ -6,7 +6,6 @@ from fastapi import FastAPI, Request, Header, HTTPException
 import hmac
 import hashlib
 import os
-import json
 import requests
 
 from main import run_lint

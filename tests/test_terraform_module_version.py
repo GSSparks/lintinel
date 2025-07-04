@@ -4,9 +4,11 @@ import os
 import tempfile
 from rules.terraform_module_version import TerraformModuleVersioning
 
+
 def create_test_file(path, content):
     with open(path, "w") as f:
         f.write(content)
+
 
 def test_terraform_module_versioning_detects_unpinned_modules():
     with tempfile.TemporaryDirectory() as repo_dir:
@@ -36,4 +38,3 @@ def test_terraform_module_versioning_detects_unpinned_modules():
 
         # Optional: Print for debug
         print("\n".join(result["issues"]))
-

@@ -4,6 +4,7 @@ from rules.base import Rule
 import os
 import subprocess
 
+
 class PythonLinter(Rule):
     name = "Python Linter"
     description = "Runs flake8 on Python files to enforce PEP8 and linting rules."
@@ -28,7 +29,7 @@ class PythonLinter(Rule):
 
         try:
             result = subprocess.run(
-                ["flake8", "--format=%(path)s::%(row)d::%(col)d::%(code)s::%(text)s"] + python_files,
+                ["flake8", "--ignore=E501", "--format=%(path)s::%(row)d::%(col)d::%(code)s::%(text)s"] + python_files,
                 capture_output=True,
                 text=True,
                 check=False
@@ -55,7 +56,7 @@ class PythonLinter(Rule):
                         })
                     except Exception as parse_error:
                         issues.append({
-                            "message": f"Could not parse flake8 output: {line}",
+                            "message": f"Could not parse flake8 output: {line}. Error: {parse_error}",
                             "code": ""
                         })
             else:

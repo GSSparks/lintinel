@@ -7,4 +7,3 @@ class Rule:
     def run(self, repo_path):
         """Override this to implement rule logic"""
         raise NotImplementedError
-
