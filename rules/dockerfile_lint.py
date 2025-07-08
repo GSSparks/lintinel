@@ -1,19 +1,22 @@
 from rules.base import Rule
 import os
 from dockerfile_parse import DockerfileParser
-
+from utils.filter_files import is_file_in_changed_list
 
 class DockerfileBestPractices(Rule):
     name = "Dockerfile Best Practices"
     description = "Checks for unpinned base images in Dockerfiles (e.g., 'ubuntu:latest')"
 
-    def run(self, repo_path):
+    def run(self, repo_path, changed_files=None):
         issues = []
 
         for root, dirs, files in os.walk(repo_path):
             for file in files:
                 if file == "Dockerfile":
                     dockerfile_path = os.path.join(root, file)
+                    if not is_file_in_changed_list(dockerfile_path, repo_path, changed_files):
+                        continue
+
                     rel_path = os.path.relpath(dockerfile_path, repo_path)
 
                     try:

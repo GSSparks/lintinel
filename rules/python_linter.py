@@ -1,22 +1,23 @@
-# rules/python_linter.py
-
 from rules.base import Rule
 import os
 import subprocess
-
+from utils.filter_files import is_file_in_changed_list
 
 class PythonLinter(Rule):
     name = "Python Linter"
     description = "Runs flake8 on Python files to enforce PEP8 and linting rules."
 
-    def run(self, repo_path):
+    def run(self, repo_path, changed_files=None):
         issues = []
 
         python_files = []
         for root, _, files in os.walk(repo_path):
             for file in files:
                 if file.endswith(".py"):
-                    python_files.append(os.path.join(root, file))
+                    file_path = os.path.join(root, file)
+                    if not is_file_in_changed_list(file_path, repo_path, changed_files):
+                        continue
+                    python_files.append(file_path)
 
         if not python_files:
             return {
@@ -42,7 +43,6 @@ class PythonLinter(Rule):
                         rel_path = os.path.relpath(full_path, repo_path)
                         line_no = int(line_no)
 
-                        # Read the line of offending code
                         with open(full_path, "r") as f:
                             lines = f.readlines()
                             offending_code = lines[line_no - 1].strip() if 0 < line_no <= len(lines) else ""

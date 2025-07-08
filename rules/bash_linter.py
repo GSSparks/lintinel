@@ -2,19 +2,22 @@ from rules.base import Rule
 import os
 import subprocess
 import json
-
+from utils.filter_files import is_file_in_changed_list
 
 class BashLinter(Rule):
     name = "Bash Linter"
     description = "Checks .sh files for syntax and style issues using shellcheck."
 
-    def run(self, repo_path):
+    def run(self, repo_path, changed_files=None):
         issues = []
 
         for root, dirs, files in os.walk(repo_path):
             for file in files:
                 if file.endswith(".sh"):
                     file_path = os.path.join(root, file)
+                    if not is_file_in_changed_list(file_path, repo_path, changed_files):
+                        continue
+
                     rel_path = os.path.relpath(file_path, repo_path)
 
                     try:
@@ -30,11 +33,7 @@ class BashLinter(Rule):
 
                         diagnostics = json.loads(result.stdout)
 
-                        # If it's a list, iterate directly
-                        if isinstance(diagnostics, list):
-                            comments = diagnostics
-                        else:
-                            comments = diagnostics.get("comments", [])
+                        comments = diagnostics if isinstance(diagnostics, list) else diagnostics.get("comments", [])
 
                         for comment in comments:
                             line_no = comment.get("line", 0)

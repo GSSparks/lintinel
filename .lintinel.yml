@@ -16,4 +16,8 @@ ai:
   provider: openai
   model: gpt-4
   fixes: true
-  tone: hilarious  # or strict, friendly, playful
+  tone: strict  # or strict, friendly, playful
+
+git:
+  pr_diff_only: true
+  base_ref: "origin/main"   # Optional; default to 'main'
