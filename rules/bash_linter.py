@@ -4,6 +4,7 @@ import subprocess
 import json
 from utils.filter_files import is_file_in_changed_list
 
+
 class BashLinter(Rule):
     name = "Bash Linter"
     description = "Checks .sh files for syntax and style issues using shellcheck."

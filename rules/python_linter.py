@@ -3,6 +3,7 @@ import os
 import subprocess
 from utils.filter_files import is_file_in_changed_list
 
+
 class PythonLinter(Rule):
     name = "Python Linter"
     description = "Runs flake8 on Python files to enforce PEP8 and linting rules."

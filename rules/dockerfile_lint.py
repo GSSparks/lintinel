@@ -3,6 +3,7 @@ import os
 from dockerfile_parse import DockerfileParser
 from utils.filter_files import is_file_in_changed_list
 
+
 class DockerfileBestPractices(Rule):
     name = "Dockerfile Best Practices"
     description = "Checks for unpinned base images in Dockerfiles (e.g., 'ubuntu:latest')"

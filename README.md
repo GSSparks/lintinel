@@ -115,8 +115,8 @@ Lintel will automatically:
 |-----------|-------------|
 |Dockerfile	| Warn on unpinned image versions (e.g. ubuntu:latest) |
 |Terraform	| Warn on unpinned module versions |
-|YAML	    | Inconsistent spacing or syntax |
-|Git	    | Missing .gitignore, .editorconfig |
+|YAML	      | Inconsistent spacing or syntax |
+|Git	      | Missing .gitignore, .editorconfig |
 |Custom	    | Easily add your own Python rules! |
 
 ## AI Integration (Coming Soon)

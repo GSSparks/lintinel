@@ -3,6 +3,7 @@ import os
 from utils.filter_files import is_file_in_changed_list
 
 
+
 class MissingDotfiles(Rule):
     name = "Missing Project Dotfiles"
     description = "Checks for the presence of .editorconfig and .gitignore in the root of the repo."

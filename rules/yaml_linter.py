@@ -4,6 +4,7 @@ import subprocess
 from utils.filter_files import is_file_in_changed_list
 
 
+
 class YAMLLinter(Rule):
     name = "YAML Linter"
     description = "Checks YAML files for syntax and style issues using yamllint."
