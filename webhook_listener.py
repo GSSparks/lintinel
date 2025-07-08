@@ -68,7 +68,6 @@ async def github_webhook(request: Request,
             print(f"📦 PR event: {action} on {repo_full_name}@{branch} ({sha})")
 
             # Step 1: Authenticate as GitHub App & get installation token
-            # (You'll need your own function to do this - here’s a stub)
             try:
                 install_token = get_installation_token(payload)
             except Exception as e:

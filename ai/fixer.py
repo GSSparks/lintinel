@@ -3,15 +3,8 @@
 from ai.client import call_openai
 
 
-def suggest_fix(
-    file_path: str,
-    code: str,
-    rule_name: str,
-    issue: str,
-    tone: str = "mentor"
-    ) -> str:
-
-        prompt = f"""
+def suggest_fix(file_path: str, code: str, rule_name: str, issue: str, tone: str = "mentor") -> str:
+    prompt = f"""
 You are an expert DevOps engineer and code reviewer.
 
 A linting rule called "{rule_name}" found this issue:
@@ -43,4 +36,4 @@ fix the issue.
 
 """.strip()
 
-        return call_openai(prompt, temperature=0.3)
+    return call_openai(prompt, temperature=0.3)
