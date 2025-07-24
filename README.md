@@ -71,9 +71,6 @@ GITHUB_PRIVATE_KEY_PATH=./private-key.pem
 OPENAI_API_KEY=your-openai-api-key
 ```
 
-**Keep your private key secure!**
-Never commit it to your repository.
-
 ### Quick Start
 1. Clone this repo and install dependencies:
 ```
